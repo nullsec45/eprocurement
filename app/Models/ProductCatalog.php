@@ -12,12 +12,19 @@ class ProductCatalog extends Model
 
     protected $fillable=[
         'name',
+        'image',
         'description',
         'price',
-        'vendor_id'
-    ];
+        'vendor_id',
+        'category_id'
+    ],
+    $hidden=["created_at","updated_at"];
 
     public function vendor():BelongsTo{
         return $this->belongsTo(Vendor::class, "vendor_id", "id");
+    }
+
+    public function category():BelongsTo{
+        return $this->belongsTo(CategoryProduct::class, "category_id", "id");
     }
 }
