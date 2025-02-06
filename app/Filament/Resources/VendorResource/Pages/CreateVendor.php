@@ -2,10 +2,9 @@
 
 namespace App\Filament\Resources\VendorResource\Pages;
 
-use App\Filament\Resources\VendorResource;
-use Filament\Actions;
-use Filament\Resources\Pages\CreateRecord;
 use Filament\Notifications\Notification;
+use App\Filament\Resources\VendorResource;
+use Filament\Resources\Pages\CreateRecord;
 
 
 class CreateVendor extends CreateRecord
@@ -17,7 +16,7 @@ class CreateVendor extends CreateRecord
         return $data;
         
     }
-
+    
     protected function afterCreate(){
         Notification::make()
                      ->title('Vendor ditambahkan')
