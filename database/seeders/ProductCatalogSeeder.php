@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\CategoryProduct;
 use App\Models\Vendor;
 use App\Models\ProductCatalog;
 use Illuminate\Database\Seeder;
@@ -21,6 +22,7 @@ class ProductCatalogSeeder extends Seeder
         $insertedCount = 0;
 
         $vendorIds = Vendor::pluck('id')->toArray();
+        $categoryIds=CategoryProduct::pluck('id')->toArray();
 
         if (empty($vendorIds)) {
             echo "Tidak ada vendor tersedia! Jalankan VendorSeeder terlebih dahulu.\n";
@@ -35,7 +37,9 @@ class ProductCatalogSeeder extends Seeder
                     'name' => 'Product '.fake()->numberBetween(1, 100000),
                     'description' => fake()->sentence(10),
                     'price' => fake()->numberBetween(5000, 999999999),
+                    'image' => 'products/default.jpg',
                     'vendor_id' => $vendorIds[array_rand($vendorIds)],
+                    'category_id' => $categoryIds[array_rand($categoryIds)],
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
@@ -45,11 +49,10 @@ class ProductCatalogSeeder extends Seeder
                 DB::table('product_catalogs')->insert($productCatalogsData);
                 echo "Inserted $insertedCount products...\n";
             } catch (\Exception $e) {
-                echo "❌ ERROR: " . $e->getMessage() . "\n";
+                echo "ERROR: " . $e->getMessage() . "\n";
                 return;
             }
         }
 
-        echo "Selesai! 100.000 Produk berhasil dimasukkan.\n";
     }
 }
