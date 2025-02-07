@@ -1,0 +1,70 @@
+version: '3.8'
+services: 
+  app:
+    container_name: app
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - "./:/app"
+      - .:/app
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+    working_dir: /app
+    command: 
+      - /bin/bash
+      - -c
+      - |
+        composer install
+        php artisan serve --host=0.0.0.0 --port=8000
+    networks:
+      - laravel_network
+    ports:
+      - 8070:8000
+      - 5173:5173
+  mysql:
+    # image: mysql:8.0
+    container_name: mysql
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    ports: 
+        - "3307:3306"
+    environment:
+        MYSQL_USER: nullsec45
+        MYSQL_PASSWORD: KJKSZPJ645
+        MYSQL_ROOT_PASSWORD: Kopihitam645_
+    volumes:
+        - ./dump:/docker-entrypoint-initdb.d
+        - app_laravel:/var/lib/mysql
+        - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+    networks:
+        - laravel_network
+  pma:
+    container_name: pma
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8085:80"
+    environment:
+      - PMA_HOST=mysql
+      #MAX_EXECUTION_TIME=0
+      - MEMORY_LIMIT=999M
+      - UPLOAD_LIMIT=999M
+      - query_cache_limit=30M
+      - max_allowed_packet=999M
+      - query_cache_size=250M
+      - thread_stack=1M
+      - key_buffer=29M
+      - thread_concurrency=4
+      - thread_cache_size=4
+      - join_buffer_size=14M
+      - PMA_ARBITRARY=1
+      - PHP_UPLOAD_MAX_FILESIZE=200M
+      - PHP_POST_MAX_SIZE=200M
+      - PHP_MAX_EXECUTION_TIME=60000
+    networks:
+      - laravel_network
+volumes:
+    app_laravel:
+networks:
+  laravel_network:
+    name: laravel_network
+    driver: bridge

@@ -1,0 +1,5 @@
+GRANT ALL PRIVILEGES ON *.* TO 'user'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
+CREATE DATABASE eprocurement;
+USE eprocurement;
