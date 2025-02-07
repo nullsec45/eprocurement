@@ -24,8 +24,7 @@ services:
     networks:
       - laravel_network_app
     ports:
-      - 8070:8000
-      - 5173:5173
+      - 8090:8000
   mysql:
     # image: mysql:8.0
     container_name: mysql
