@@ -14,9 +14,11 @@ use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Radio;
 use Illuminate\Support\Facades\Auth;
 use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Filters\SelectFilter;
 use App\Filament\Resources\VendorResource\Pages;
 
 class VendorResource extends Resource
@@ -67,27 +69,30 @@ class VendorResource extends Resource
             ]);
     }
 
-    public function afterCreate(Vendor $record){
-        $user=Auth::user();
-
-        if($user->role == 'VENDOR' && is_null($user->vendor_id)){
-            $user->update(['vendor_id' => $record->id]);
-        }
-    }
+   
     public static function table(Table $table): Table
     {
         return $table
             ->query(static::getFilteredQuery()) 
             ->columns([
-                Tables\Columns\TextColumn::make('name')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('email')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('phone')->sortable(),
-                Tables\Columns\TextColumn::make('is_approved')
+                TextColumn::make('name')->sortable()->searchable(),
+                TextColumn::make('email')->sortable()->searchable(),
+                TextColumn::make('phone')->sortable(),
+                TextColumn::make('is_approved')
                 ->label('Status Persetujuan')
-                ->formatStateUsing(fn ($state) => $state ? 'Disetujui' : 'Ditolak')
+                ->formatStateUsing(fn ($state) => match ($state) {
+                    -1 => 'Proses',
+                    0 => 'Ditolak',
+                    1 => 'Disetujui',
+                })
                 ->badge()
-                ->color(fn ($state) => $state ? 'success' : 'danger'),
-                Tables\Columns\TextColumn::make('actions')->label(label: 'Aksi')
+                ->color(fn ($state) => match ($state) {
+                    -1 => 'warning', 
+                    0 => 'danger',   
+                    1 => 'success',  
+                    default => 'gray'
+                }),
+                TextColumn::make('actions')->label(label: 'Aksi')
                                                                 ->extraAttributes([
                                                                     'class' => 'text-center'
                                                                 ])->alignCenter()
@@ -97,9 +102,10 @@ class VendorResource extends Resource
 
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('is_approved')
+               SelectFilter::make('is_approved')
                                             ->label('Status Persetujuan')
                                             ->options([
+                                                    -1 => 'Proses',
                                                     1 => 'Disetujui',
                                                     0 => 'Ditolak'
                                                 ]
