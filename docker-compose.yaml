@@ -15,7 +15,7 @@ services:
       - -c
       - |
         composer install
-        cp .env.example .env
+        if [ ! -f .env ]; then cp .env.example .env; fi
         php artisan key:generate
         php artisan storage:link
         chown www-data:www-data -R storage
@@ -39,13 +39,15 @@ services:
         MYSQL_ROOT_PASSWORD: *******
     volumes:
         - ./dump:/docker-entrypoint-initdb.d
-        - app_laravel:/var/lib/mysql
+        - app_laravel_volume:/var/lib/mysql
         - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
     networks:
         - laravel_network
   pma:
     container_name: pma
     image: phpmyadmin/phpmyadmin
+    depends_on:
+      - mysql
     ports:
       - "8085:80"
     environment:
@@ -68,7 +70,7 @@ services:
     networks:
       - laravel_network
 volumes:
-    app_laravel:
+    app_laravel_volume:
 networks:
   laravel_network:
     name: laravel_network
