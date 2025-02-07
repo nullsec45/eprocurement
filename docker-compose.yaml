@@ -29,9 +29,9 @@ services:
     ports: 
         - "3307:3306"
     environment:
-        MYSQL_USER: nullsec45
-        MYSQL_PASSWORD: KJKSZPJ645
-        MYSQL_ROOT_PASSWORD: Kopihitam645_
+        MYSQL_USER: user
+        MYSQL_PASSWORD: ********
+        MYSQL_ROOT_PASSWORD: *******
     volumes:
         - ./dump:/docker-entrypoint-initdb.d
         - app_laravel:/var/lib/mysql
