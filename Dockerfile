@@ -27,8 +27,6 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 COPY . .
 
-RUN cp .env.example .env
-
 # COPY bash/start.sh /usr/local/bin/start
 # COPY deployments/imagick/policy.xml /etc/ImageMagick-6/policy.xml
 # RUN chmod +x /usr/local/bin/start
