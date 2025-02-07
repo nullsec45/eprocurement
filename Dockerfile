@@ -31,7 +31,3 @@ COPY . .
 # COPY deployments/imagick/policy.xml /etc/ImageMagick-6/policy.xml
 # RUN chmod +x /usr/local/bin/start
 
-
-CMD ["sh", "-c", "sleep 10 && php artisan migrate --force && php-fpm"]
-
-EXPOSE 8000
