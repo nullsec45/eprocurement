@@ -45,7 +45,7 @@
     <script>
         function ajaxProduk(page,category,keyword){
             $.ajax({
-                url: `{{route('data-product')}}?page=${page}&category=${category}&keyword=${keyword}`,
+                url: `{{secure_url('data-product')}}?page=${page}&category=${category}&keyword=${keyword}`,
                 type: "get",
                 dataType: "json",
                 async: false,
